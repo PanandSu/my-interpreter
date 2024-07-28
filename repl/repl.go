@@ -10,13 +10,13 @@ import (
 	"my-interpreter/parser"
 )
 
-const PROMPT = "JueJin>> "
+const PROMPT = "code>> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnvironment()
 	for {
-		_, _ = fmt.Fprintf(out, PROMPT)
+		fmt.Fprintf(out, PROMPT)
 		if ok := scanner.Scan(); !ok {
 			return
 		}
@@ -28,37 +28,23 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
-		_, _ = io.WriteString(out, program.String())
-		_, _ = io.WriteString(out, "\n")
+		io.WriteString(out, program.String())
+		io.WriteString(out, "\n")
 		if evaluated := evaluator.Eval(program, env); evaluated != nil {
-			_, _ = io.WriteString(out, evaluated.Inspect()+"\n")
+			io.WriteString(out, evaluated.Inspect()+"\n")
 		}
 		/*
 			tok := l.NextToken()
 			for tok.Type != token.EOF {
 				tok = l.NextToken()
-				_, _ = fmt.Fprintf(out, "%s\n", tok)
+				fmt.Fprintf(out, "%s\n", tok)
 			}
 		*/
 	}
 }
 
-const MONKEY_FACE = `            
-   .--.  .-"__,__"-.  .--.
-  / .. \/  .-. .-.  \/ .. \
- | |  '|  /   Y   \  |'  | |
- | \   \  \ 0 | 0 /  /   / |
-  \ '- ,\.-"""""""-./, -' /
-   ''-' /_   ^ ^   _\ '-''
-       |  \._   _./  |
-       \   \ '~' /   /
-        '._ '-=-' _.'
-           '-----'
-`
-
 func printParserErrors(out io.Writer, errors []string) {
-	_, _ = io.WriteString(out, MONKEY_FACE)
 	for _, msg := range errors {
-		_, _ = io.WriteString(out, "\t"+msg+"\n")
+		io.WriteString(out, "\t"+msg+"\n")
 	}
 }

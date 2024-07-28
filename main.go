@@ -10,7 +10,7 @@ import (
 
 func main() {
 	usr, err := user.Current()
-	//MATEBOOK14S\35895
+	//MATEBOOK14S\35895,pansu
 	if err != nil {
 		log.Fatal(err)
 	}
